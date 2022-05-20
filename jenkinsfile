@@ -1,0 +1,23 @@
+pipeline{
+    agent any
+    stages{
+        stage("git"){
+            steps{
+                git credentialsId: '1', url: 'https://github.com/NissyJ/exp.git'
+            }
+        }
+        stage("build"){
+            steps{
+                sh 'mvn clean install'
+            }
+        }
+        stage("deploy"){
+            steps{
+                sshagent(['deploy_user']) {
+                    sh 'scp -o StrictHostKeyChecking=no target/java-tomcat-maven-example.war ec2-user@3.138.155.122:/opt/apache-tomcat-8.5.63/webapps'
+    // some block
+}
+            }
+        }
+    }
+}
